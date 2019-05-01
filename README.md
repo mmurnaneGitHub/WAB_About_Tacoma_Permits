@@ -7,7 +7,7 @@ Version 2.12
 
 INSTRUCTIONS:
 
-1. Copy to jimu-theme.css jimu.js\css\jimu-theme.css
+1. Copy jimu-theme.css to \jimu.js\css\jimu-theme.css
 
 2.
 
