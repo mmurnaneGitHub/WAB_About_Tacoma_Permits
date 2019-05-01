@@ -1,2 +1,2 @@
 # WAB_Tacoma_Permits
-Customized widgets for Tacoma Permits
+Customized items for Tacoma Permits: https://wspdsmap.cityoftacoma.org/website/PDS/Permits/
