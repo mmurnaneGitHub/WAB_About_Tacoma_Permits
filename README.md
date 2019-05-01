@@ -15,7 +15,6 @@ INSTRUCTIONS:
 
 4. Copy RelatedRecordsPopupProjector.js to \jimu.js\RelatedRecordsPopupProjector.js
 
-5.
 
 
 
