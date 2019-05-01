@@ -68,7 +68,7 @@
 }
 
 .jimu-link:hover{
-  text-decoration: underline;
+  text-decoration: none;   /*MJM modification from origial*/
   color: #ffffff;
   opacity: 1;
 }
