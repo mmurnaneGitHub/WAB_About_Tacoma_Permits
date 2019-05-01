@@ -7,13 +7,13 @@ Version 2.12
 
 INSTRUCTIONS:
 
-1. Copy jimu-theme.css to \jimu.js\css\jimu-theme.css
+1. Copy About_Widget.js to \widgets\About\Widget.js
 
-2.
+2. Copy index.html & indx_TEST.html to root.
 
-3.
+3. Copy jimu-theme.css to \jimu.js\css\jimu-theme.css
 
-4.
+4. Copy RelatedRecordsPopupProjector.js to \jimu.js\RelatedRecordsPopupProjector.js
 
 5.
 
