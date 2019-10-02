@@ -237,19 +237,22 @@
       //MJM - Force a reload from server, bypassing browser cache - use on WAB version updates
       window.onload = function() {
        var currentWAB = deployVersion; //Variable in the browser cache version of env.js
-       var latestWAB = '2.12'; //The latest version (string type) 
+       var latestWAB = '2.13'; //The latest version (string type) 
+       //var latestWAB = '2.14'; //Force a reload 
+       //var anchorURL = '#20190509';  //For incremental changes - Anchor part of a URL added to prevent an infinite loop and reload other urls with previous anchors (current date works for unique variable)
+       var anchorURL = '#WAB_213';  //For WAB Upgrades - Anchor part of a URL added to prevent an infinite loop and reload other urls with previous anchors (current date works for unique variable)
        if (latestWAB !== currentWAB) {   //cache has an different version of WAB - check for value and type (string)
-          if (!window.location.hash) { //Return the anchor part of a URL starting with #. If no #, then  !window.location.hash returns true
-            window.location = window.location + '#wab_212'; //add # to URL
+          if (window.location.hash !== anchorURL) { //Return the anchor part of a URL starting with #. If # doesn't equal the anchorURL reload the page from server
+            window.location = window.location.href.split('#')[0] + anchorURL; //Remove any existing hash from current url and add the new # to URL
             window.location.reload(true); //Reload the current page (and all elements) from the server with # added to the URL, without using the browser cache.
           }
-       }
+        }
       }
      </script>
 
-		<!-- MJM Widget Tests -->
+    <!-- MJM Widget Tests -->
     <script type="text/javascript" src="WidgetTests/WidgetTests.js"></script>
-
+        
 </body>
 
 </html>
