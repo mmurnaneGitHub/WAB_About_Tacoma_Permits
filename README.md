@@ -3,7 +3,7 @@ Customized items for Tacoma Permits: https://wspdsmap.cityoftacoma.org/website/P
 
 Customized Legend Widget for Tacoma Permits: https://github.com/mmurnaneGitHub/WAB_Legend_Tacoma_Permits
 
-Version 2.12
+Version 2.13
 
 INSTRUCTIONS:
 
@@ -12,6 +12,8 @@ INSTRUCTIONS:
 2. Copy jimu-theme.css to \jimu.js\css\jimu-theme.css
 
 3. Copy RelatedRecordsPopupProjector.js to \jimu.js\RelatedRecordsPopupProjector.js
+
+4. Copy index.html & index_TEST.html to root directory.
 
 
 
