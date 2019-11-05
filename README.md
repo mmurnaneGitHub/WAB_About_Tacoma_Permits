@@ -3,7 +3,7 @@ Customized items for Tacoma Permits: https://wspdsmap.cityoftacoma.org/website/P
 
 Customized Legend Widget for Tacoma Permits: https://github.com/mmurnaneGitHub/WAB_Legend_Tacoma_Permits
 
-Version 2.13
+Version 2.14
 
 INSTRUCTIONS:
 
