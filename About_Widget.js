@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright © 2014 - 2017 Esri. All Rights Reserved.
+// Copyright © Esri. All Rights Reserved.
 //
 // Licensed under the Apache License Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,61 +15,87 @@
 ///////////////////////////////////////////////////////////////////////////
 
 define(['dojo/_base/declare',
-    'dojo/_base/html',
-    'dojo/query',
-    'dojo/on',
-    'dojo/_base/lang',
-    './common',
-    'dijit/_WidgetsInTemplateMixin',
-    'jimu/BaseWidget'
-  ],
-  function(declare, html, query, on, lang, common, _WidgetsInTemplateMixin, BaseWidget) {
+  'dojo/_base/html',
+  'dojo/query',
+  'dojo/on',
+  'dojo/_base/lang',
+  './common',
+  'dijit/_WidgetsInTemplateMixin',
+  'jimu/utils',
+  'jimu/BaseWidget'
+],
+  function (declare, html, query, on, lang, common, _WidgetsInTemplateMixin, jimuUtils, BaseWidget) {
     var clazz = declare([BaseWidget, _WidgetsInTemplateMixin], {
       baseClass: 'jimu-widget-about',
-      // clasName: 'esri.widgets.About',
-
-      _hasContent: null,
 
       postCreate: function () {
         this.inherited(arguments);
-        
+
         //MJM - get date of current data json file (last update) ---------------------------------------------------------------------------
         _fetchDate = function () {
-                                  try {
-                                      var req=new XMLHttpRequest();
-                                      req.open("HEAD", 'data/Permits.json', false);
-                                      req.send(null);
-                                      if(req.status== 200){
-                                          var date1= req.getResponseHeader('Last-Modified').split(" ");
-                                          return "<b>Last Updated:</b> " + date1[2] + " " + date1[1] + ", " + date1[3];
-                                      }
-                                       else return "";  //no file found
-                                  } catch(er) {
-                                      return er.message;
-                                  }
-                              };
+          try {
+            var req = new XMLHttpRequest();
+            req.open("HEAD", 'data/Permits.json', false);
+            req.send(null);
+            if (req.status == 200) {
+              var date1 = req.getResponseHeader('Last-Modified').split(" ");
+              return "<b>Last Updated:</b> " + date1[2] + " " + date1[1] + ", " + date1[3];
+            }
+            else return "";  //no file found
+          } catch (er) {
+            return er.message;
+          }
+        };
 
         var theDate = _fetchDate();  //get date
         var currentContent = this.config.about.aboutContent;
-         this.config.about.aboutContent = currentContent.replace("<b>Last Updated:</b>", theDate);  //manipulate existing text to add last update
-         this._hasContent = this.config.about && this.config.about.aboutContent;  //text for the panel
+        this.config.about.aboutContent = currentContent.replace("<b>Last Updated:</b>", theDate);  //manipulate existing text to add last update
+        this._hasContent = this.config.about && this.config.about.aboutContent;  //text for the panel
         // End MJM---------------------------------------------------------------------------------------------------------------=---------
       },
 
       startup: function () {
         this.inherited(arguments);
-
         if (common.isDefaultContent(this.config)) {
           this.config.about.aboutContent = common.setDefaultContent(this.config, this.nls);
         }
+        this.isOpen = true;
+
+        this.openAtStartAysn = true;
         this.resize();
+
+        this.openAtStartAysn = true;
+        if (jimuUtils.isAutoFocusFirstNodeWidget(this)) {
+          this.customContentNode.focus();
+        }
+
+        //Focus customContentNode
+        //use firstTabNode for passing focus state to customContentNode (FF)
+        this.own(on(this.splashContainerNode, 'focus', lang.hitch(this, function () {
+          this.firstTabNode.focus();
+        })));
+        this.own(on(this.firstTabNode, 'focus', lang.hitch(this, function () {
+          this.customContentNode.focus();
+        })));
+
+        jimuUtils.setWABLogoDefaultAlt(this.customContentNode);
       },
 
       resize: function () {
         this._resizeContentImg();
       },
 
+      onOpen: function () {
+        this.isOpen = true;
+        //resolve issue #15086 when network is so slow.
+        setTimeout(lang.hitch(this, function () {
+          this.isOpen = false;
+        }), 50);
+      },
+
       _resizeContentImg: function () {
+        //record current activeElement before resizing
+        var _activeElement = document.activeElement;
         html.empty(this.customContentNode);
 
         var aboutContent = html.toDom(this.config.about.aboutContent);
@@ -89,9 +115,25 @@ define(['dojo/_base/declare',
               }
             }));
           }
+
+          //Init dom's attrs and events again because doms are new after resizing.
+          var focusableNodes = jimuUtils.getFocusNodesInDom(this.domNode);
+          if (focusableNodes.length) {
+            jimuUtils.initFirstFocusNode(this.domNode, focusableNodes[0]);
+            jimuUtils.initLastFocusNode(this.domNode, focusableNodes[focusableNodes.length - 1]);
+          }
+
+          //focus firstNode if required
+          if (this.isOpen || html.isDescendant(_activeElement, this.domNode)) {
+            var firstNode = jimuUtils.getFirstFocusNode(this.domNode);
+            if (jimuUtils.isAutoFocusFirstNodeWidget(this)) {
+              firstNode.focus();
+            }
+            this.isOpen = false;
+          }
         }
       },
-      _resizeImg: function(img) {
+      _resizeImg: function (img) {
         var customBox = html.getContentBox(this.customContentNode);
         var imgSize = html.getContentBox(img);
         if (imgSize && imgSize.w && imgSize.w >= customBox.w) {
